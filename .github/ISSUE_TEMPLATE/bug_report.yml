@@ -1,0 +1,99 @@
+name: Bug Report
+description: Something is broken or not working as expected
+title: "[Bug]: "
+labels: ["bug", "triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out a bug report. 
+        **For security vulnerabilities, please see [SECURITY.md](../../SECURITY.md) instead.**
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: A clear description of the bug.
+      placeholder: "e.g. Clicking 'Add Entry' opens the modal but saving always shows an error..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Exact steps to trigger the bug.
+      value: |
+        1. Go to '...'
+        2. Click on '...'
+        3. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behaviour
+      description: What should have happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behaviour
+      description: What actually happened? Include any error messages.
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Secure Cave Version
+      placeholder: "e.g. 2.0.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      options:
+        - Chrome / Chromium
+        - Firefox
+        - Safari
+        - Edge
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Authentication (login/register)
+        - Vault (add/edit/delete passwords)
+        - TOTP (2FA codes)
+        - Health Scanner
+        - Import / Export (CSV)
+        - Backend / API
+        - UI / Styling
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: console
+    attributes:
+      label: Browser Console Errors
+      description: Open DevTools (F12) → Console tab and paste any errors here.
+      render: text
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Screenshots, logs, or anything else useful.

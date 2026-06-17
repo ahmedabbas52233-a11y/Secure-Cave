@@ -1,0 +1,76 @@
+name: Feature Request
+description: Suggest an idea or improvement for Secure Cave
+title: "[Feat]: "
+labels: ["enhancement"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a feature! Before submitting, please search existing issues to avoid duplicates.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: Describe the problem or limitation you are experiencing.
+      placeholder: "e.g. I can't organise my passwords into folders, so large vaults get hard to navigate..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the feature you'd like to see.
+      placeholder: "e.g. A folder / group system that lets you nest entries under named groups..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Other approaches you thought about.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Feature Area
+      options:
+        - Vault / Passwords
+        - Authentication
+        - TOTP / 2FA
+        - Health / Security Analysis
+        - Import / Export
+        - Encryption / Crypto
+        - UI / UX
+        - API / Backend
+        - DevOps / Deployment
+        - Other
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority (from your perspective)
+      options:
+        - Nice to have
+        - Important
+        - Critical / Blocking my use
+
+  - type: checkboxes
+    id: security
+    attributes:
+      label: Security Implications
+      options:
+        - label: This feature changes how data is encrypted or decrypted
+        - label: This feature changes authentication or session management
+        - label: This feature requires new data to be sent to the server
+        - label: This feature has no security implications
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Mockups, links, examples from other tools, etc.

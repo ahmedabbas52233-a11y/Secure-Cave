@@ -1,0 +1,122 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ── Backend lint + test ───────────────────────────────────────────
+  backend:
+    name: Backend — Node.js ${{ matrix.node-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install backend dependencies
+        working-directory: backend
+        run: npm ci
+
+      - name: Check for leaked secrets in source
+        working-directory: backend
+        run: |
+          echo "Checking for accidental secret exposure..."
+          # Fail if JWT_SECRET or real passwords appear hardcoded
+          if grep -rn "JWT_SECRET\s*=" --include="*.js" . | grep -v ".env" | grep -v "process.env"; then
+            echo "❌ Possible hardcoded secret found!"
+            exit 1
+          fi
+          echo "✅ No hardcoded secrets found"
+
+      - name: Check auth middleware does not log headers
+        working-directory: backend
+        run: |
+          if grep -n "console.log" middleware/auth.js; then
+            echo "❌ Security: auth middleware must not log headers (leaks JWTs)"
+            exit 1
+          fi
+          echo "✅ Auth middleware is clean"
+
+      - name: Verify no /api double-prefix in frontend hooks
+        working-directory: frontend/src/hooks
+        run: |
+          if grep -n '"/api/' useVault.js useTOTP.js 2>/dev/null; then
+            echo "❌ API paths must not include /api/ prefix — apiFetch already prepends it"
+            exit 1
+          fi
+          echo "✅ API paths are correct"
+        # Note: run from project root if paths differ in your fork
+
+  # ── Frontend build ────────────────────────────────────────────────
+  frontend:
+    name: Frontend — Build check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Build frontend
+        working-directory: frontend
+        env:
+          VITE_API_URL: /api
+        run: npm run build
+
+      - name: Verify build output exists
+        run: |
+          if [ ! -d "frontend/dist" ]; then
+            echo "❌ Build output not found"
+            exit 1
+          fi
+          echo "✅ Build successful — $(du -sh frontend/dist | cut -f1)"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        if: github.ref == 'refs/heads/main'
+        with:
+          name: frontend-dist
+          path: frontend/dist/
+          retention-days: 7
+
+  # ── Security audit ────────────────────────────────────────────────
+  audit:
+    name: Dependency Audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Audit backend dependencies
+        working-directory: backend
+        run: npm audit --audit-level=high
+        continue-on-error: true   # Report but don't block on transitive dep issues
+
+      - name: Audit frontend dependencies
+        working-directory: frontend
+        run: npm audit --audit-level=high
+        continue-on-error: true
