@@ -19,7 +19,7 @@ test.describe("UI — Theme & Mobile", () => {
     await page.reload();
     // Re-enter master key
     await page.locator('input[type="password"]').fill("Mammoth99!!");
-    await page.getByRole("button", { name: /Unlock Cave/i }).click();
+    await page.getByRole("button", { name: /Unlock Vault/i }).click();
     await expect(page.getByText("Vault")).toBeVisible();
     theme = await page.evaluate(() => document.documentElement.getAttribute("data-theme"));
     expect(theme).toBe("light");

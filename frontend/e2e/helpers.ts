@@ -11,16 +11,16 @@ export async function registerAndUnlock(page: Page, email?: string): Promise<str
 
   await page.goto("/");
 
-  // Auth screen — Register tab
-  await page.getByRole("button", { name: /Register/i }).click();
+  // Auth screen — Register tab (tab label: "Register", submit button: "Create Account")
+  await page.getByRole("button", { name: "Register", exact: true }).click();
   await page.locator('input[type="email"]').fill(testEmail);
   await page.locator('input[type="password"]').fill(BASE_PW);
-  await page.getByRole("button", { name: /Claim Your Cave/i }).click();
+  await page.getByRole("button", { name: /Create Account/i }).click();
 
-  // Lock screen — master key
-  await expect(page.getByText("Cave Locked")).toBeVisible({ timeout: 6_000 });
+  // Lock screen — same password, re-entered
+  await expect(page.getByText("One More Step")).toBeVisible({ timeout: 6_000 });
   await page.locator('input[type="password"]').fill(BASE_PW);
-  await page.getByRole("button", { name: /Unlock Cave/i }).click();
+  await page.getByRole("button", { name: /Unlock Vault/i }).click();
 
   // Should reach vault
   await expect(page.getByText("Vault")).toBeVisible({ timeout: 8_000 });
@@ -35,9 +35,9 @@ export async function loginAndUnlock(page: Page, email: string): Promise<void> {
   await page.locator('input[type="email"]').fill(email);
   await page.locator('input[type="password"]').fill(BASE_PW);
   await page.getByRole("button", { name: /Enter the Cave/i }).click();
-  await expect(page.getByText("Cave Locked")).toBeVisible({ timeout: 6_000 });
+  await expect(page.getByText("One More Step")).toBeVisible({ timeout: 6_000 });
   await page.locator('input[type="password"]').fill(BASE_PW);
-  await page.getByRole("button", { name: /Unlock Cave/i }).click();
+  await page.getByRole("button", { name: /Unlock Vault/i }).click();
   await expect(page.getByText("Vault")).toBeVisible({ timeout: 8_000 });
 }
 

@@ -112,3 +112,36 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   - `ui.spec.ts` — theme toggle persistence, mobile sidebar, backdrop
 - Shared `helpers.ts` — `registerAndUnlock()` and `loginAndUnlock()` utilities
 - `npm run test:e2e` / `npm run test:e2e:ui` scripts added to `package.json`
+
+---
+
+## [2.1.1] — 2024-12-20
+
+### 🔴 Critical Fixes — "Route not found" on login
+
+The root cause was never a single bug but an entire class of silent failure: any mismatch between the frontend's configured API base URL and the backend's actual address produced a generic, undebuggable `{"error":"Route not found"}`. Hardened against the whole class instead of patching one instance:
+
+- **`server.js`** — added slash-normalizing middleware (`req.url.replace(/\/{2,}/g, "/")`) as the very first middleware in the stack. A trailing slash in `VITE_API_URL` (e.g. `https://host/api/`) previously produced double-slashed paths like `/api//auth/login` that silently 404'd. Now normalized before routing.
+- **`server.js`** — the 404 handler now echoes back `method`, `path`, and a `hint` field instead of a bare `"Route not found"` string, and logs a `console.warn` server-side. A misconfigured request is now instantly diagnosable from the Network tab or server logs instead of requiring source-code archaeology.
+- **`AuthContext.jsx`** — `apiFetch` now strips any trailing slash from the configured base URL before concatenating paths, eliminating the double-slash bug at its source rather than only band-aiding it server-side.
+- **`AuthContext.jsx`** — distinguishes three previously-conflated failure modes that all used to surface as "Request failed": (1) the request never reached any server (`fetch` itself threw — now reported as "Could not reach the server at ..."), (2) the server responded with non-JSON (now reported with the actual HTTP status), (3) a genuine 404 from the hardened backend (now includes the method/path/hint detail).
+- **`useServerStatus.js`** *(new hook)* — pings `/api/health` on mount with a 4-second timeout. The Auth screen now shows an upfront red banner — including the exact URL that was tried — if the backend is unreachable, instead of letting the user discover this only after submitting the login form.
+
+### 🟡 UX Fix — "What is master password?"
+
+The app previously used three different terms for the same value across two screens: "Password" (login), "Master Password" (register), and "Master Key" (post-login unlock screen). This was a genuine design flaw, not a misunderstanding — fixed by:
+
+- **`AuthScreen.jsx`** — both Sign In and Register tabs now label the field simply "Password." A persistent info box beneath the form explains, in plain language, that this password does double duty (authentication + encryption) and that a second prompt will follow.
+- **`LockScreen.jsx`** — renamed from referring to "Master Key" to "Password," matching the login screen. The heading changed from "Cave Locked" to "One More Step" to better signal this is a continuation of login, not a separate, unexplained gate. An inline explanation clarifies this step happens entirely in-browser and is the same password just entered.
+- **`SettingsView.jsx`** — the Security Architecture list's PBKDF2 entry no longer refers to a "master key," for consistency with the rest of the UI.
+- Internal variable names (`masterKey`, `deriveKey(masterPassword)`, etc.) were intentionally left unchanged — they are implementation detail, not user-facing copy, and renaming them carried no benefit while increasing diff noise.
+
+### ✅ Documentation
+
+- **`README.md`** — full rewrite. Added a dedicated **"How Login Actually Works"** section explaining the two-step model with a diagram, a **Troubleshooting** section addressing both bugs above by name (matching the exact symptoms reported), a `curl`-based backend health-check verification step in Setup, and a complete **Screenshots** section with 16 named placeholders.
+- **`docs/screenshots/README.md`** *(new)* — a checklist describing exactly what to capture for each of the 16 screenshot placeholders referenced in the main README.
+
+### 🧪 Test Updates
+
+- `e2e/helpers.ts`, `e2e/auth.spec.ts`, `e2e/ui.spec.ts` — updated to match the renamed UI text (`"Register"` tab / `"Create Account"` submit button are now distinct accessible names to avoid Playwright strict-mode ambiguity; `"One More Step"` / `"Unlock Vault"` replace the old `"Cave Locked"` / `"Unlock Cave"` text).
+- `auth.spec.ts` — added a new test asserting both explanation boxes (login and register) are visible, directly covering the fixed UX issue.

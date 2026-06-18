@@ -4,7 +4,7 @@ import { useTheme } from "../context/ThemeContext";
 
 const SECURITY_ITEMS = [
   ["AES-256-GCM Encryption",  "Passwords encrypted in-browser with a unique IV before any data leaves your device."],
-  ["PBKDF2 Key Derivation",   "Master key strengthened via PBKDF2-SHA256 with 120,000 iterations."],
+  ["PBKDF2 Key Derivation",   "Your password is strengthened via PBKDF2-SHA256 with 120,000 iterations before it's used to encrypt anything."],
   ["Zero-Knowledge Backend",  "Server stores only ciphertext + IVs — mathematically cannot read your passwords."],
   ["HIBP k-Anonymity",        "Breach checks send only the first 5 hex chars of your SHA-1 hash — full hash never leaves the browser."],
   ["JWT Authentication",      "Every API call requires a signed, expiry-bounded JWT. No session cookies."],
