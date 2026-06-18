@@ -13,7 +13,7 @@ export function useVault(masterKey) {
   const [visiblePws, setVisiblePws]   = useState({});
   const [loading, setLoading]         = useState(false);
 
-    // BUG FIX: paths had vault prefix which double-prefixed since apiFetch
+  // BUG FIX: paths were "/api/vault" which double-prefixed since apiFetch
   // already prepends the API base ("/api"). Corrected to "/vault".
   const loadVault = useCallback(async () => {
     setLoading(true);

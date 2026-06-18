@@ -62,3 +62,53 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Vault search by site and username
 - Password strength bar (analyseStrength, 5 levels)
 - Favicon, skeleton loading cards, empty state, toast notifications
+
+---
+
+## [2.1.0] — 2024-12-15
+
+### Added — Roadmap Items (Priority 1–4 + E2E)
+
+#### 🔒 Auto-Lock (`hooks/useAutoLock.js`)
+- New `useAutoLock(onLock, timeoutMs)` hook — idles vault lock after configurable period
+- Locks immediately on `document.visibilitychange` (tab hidden / window minimised)
+- Activity events reset the idle timer: `mousemove`, `keydown`, `click`, `touchstart`, `scroll`
+- Timeout options in Settings: Disabled / 1 / 5 / 15 / 30 minutes
+- Preference persisted to `localStorage` key `sc_autolock`
+- Stable `lockRef` prevents effect re-fires on every render
+
+#### 🌗 Dark / Light Theme (`context/ThemeContext.jsx`)
+- `ThemeProvider` applies `data-theme` attribute to `<html>` element
+- Full CSS variable override in `:root[data-theme="light"]` — all 14 colour tokens
+- Preference persisted in `localStorage` key `sc_theme`
+- Sun/Moon toggle button in sidebar footer
+- All view components use `useTheme()` hook `C` colour object for inline styles
+- 250ms CSS transition on `background` and `color` for smooth switch
+
+#### 📱 Mobile Responsive Layout
+- Sidebar converts to fixed overlay on `max-width: 768px`
+- `transform: translateX(-100%)` when closed; `.open` class slides it in
+- Frosted-glass backdrop (`sidebar-backdrop`) — click to dismiss
+- Hamburger `<Menu>` button in top bar — hidden on desktop via CSS
+- iOS Safari `min-height: -webkit-fill-available` fix applied to root
+- Button padding reduced at `max-width: 540px`
+- `min-width: 0` on main content flex child prevents overflow
+
+#### 🎲 Passphrase Generator (`utils/passphrase.js`)
+- 256-word curated EFF-subset wordlist (unambiguous, no homophones)
+- `generatePassphrase(wordCount, separator)` — CSPRNG via `crypto.getRandomValues`
+- Entropy display: shows bit count based on word count
+- `EntryModal` Forge panel now has Password / Passphrase tabs
+- Separator picker: `-` / space / `.` / `_`
+- Word count slider: 3–8 words
+
+#### 🧪 E2E Test Suite (Playwright)
+- `playwright.config.ts` — Chromium + Pixel 5 mobile project
+- 5 test files, 28 tests total:
+  - `auth.spec.ts` — register, login, logout, persistence, error states
+  - `vault.spec.ts` — add, reveal, copy, edit, delete, search, forge, validation
+  - `health.spec.ts` — empty state, weak detection, reuse detection, fix button
+  - `settings.spec.ts` — auto-lock, export disabled state, security section
+  - `ui.spec.ts` — theme toggle persistence, mobile sidebar, backdrop
+- Shared `helpers.ts` — `registerAndUnlock()` and `loginAndUnlock()` utilities
+- `npm run test:e2e` / `npm run test:e2e:ui` scripts added to `package.json`
