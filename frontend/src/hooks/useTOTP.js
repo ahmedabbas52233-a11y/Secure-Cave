@@ -49,11 +49,11 @@ export function useTOTP(masterKey) {
   }, [entries, getSecret]);
 
   const addEntry = useCallback(async (name, secret) => {
-    const { encryptedSecret, iv: secretIv } = await encryptText(secret, masterKey);
+    const { ciphertext: encryptedSecret, iv: secretIv } = await encryptText(secret, masterKey);
     // rename iv to secretIv
     const { entry } = await apiFetch("/totp", {
       method: "POST",
-      body: JSON.stringify({ name, encryptedSecret, secretIv }),
+      body: JSON.stringify({ name, encryptedSecret, secretIv, issuer }),
     });
     setEntries(e => [entry, ...e]);
     setDecSecrets(d => ({ ...d, [entry._id]: secret }));
