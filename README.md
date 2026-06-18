@@ -60,7 +60,7 @@ After signing in, you're asked for your password **one more time** — this seco
 
 | Add entry — Password Forge | Add entry — Passphrase Forge |
 |---|---|
-| ![Password generator](docs/screenshots/vault-add-modal.png) | ![Passphrase generator](docs/screenshots/vault-passphrase-forge.png) |
+| ![Password generator](https://github.com/ahmedabbas52233-a11y/Secure-Cave/blob/main/docs/screenshots/Password-Forge.png) | ![Passphrase generator](https://github.com/ahmedabbas52233-a11y/Secure-Cave/blob/main/docs/screenshots/Forge-PassPhase.png) |
 
 ![Revealed password](https://github.com/ahmedabbas52233-a11y/Secure-Cave/blob/main/docs/screenshots/Revealed-Passwords.png)
 
