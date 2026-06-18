@@ -79,8 +79,7 @@ app.use((err, _req, res, _next) => {
 });
 
 // ── MongoDB + Start ───────────────────────────
-mongoose
-  .connect(process.env.MONGODB_URI)
+mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log("✅ MongoDB connected");
     const PORT = process.env.PORT || 5000;
@@ -92,6 +91,6 @@ mongoose
   })
   .catch((err) => {
     console.error("❌ MongoDB connection failed:", err.message);
-    console.error("   Check MONGODB_URI in backend/.env — is MongoDB running?");
+    console.error("   Check MONGO_URI in backend/.env — is MongoDB running?");
     process.exit(1);
   });
