@@ -40,35 +40,33 @@
 
 ## 📸 Screenshots
 
-> Replace the placeholders below by adding images to `docs/screenshots/` — see [`docs/screenshots/README.md`](docs/screenshots/README.md) for exact filenames and what to capture in each one.
-
 ### Sign in & account creation
 
 | Sign In | Create Account |
 |---|---|
-| ![Sign in screen](docs/screenshots/auth-login.png) | ![Register screen](docs/screenshots/auth-register.png) |
+| ![Sign in screen](https://github.com/ahmedabbas52233-a11y/Secure-Cave/blob/main/docs/screenshots/Sign-in.png) | ![Register screen](https://github.com/ahmedabbas52233-a11y/Secure-Cave/blob/main/docs/screenshots/Register-account.png) |
 
 ### Unlocking your vault
 
 After signing in, you're asked for your password **one more time** — this second entry happens entirely in the browser and derives the key that decrypts your vault. See [How Login Actually Works](#-how-login-actually-works-read-this-first) below for why this exists.
 
-![Unlock screen](docs/screenshots/unlock-screen.png)
+![Unlock screen](https://github.com/ahmedabbas52233-a11y/Secure-Cave/blob/main/docs/screenshots/Unlock-Cave.png)
 
 ### Vault
 
 | Empty vault | Populated vault |
 |---|---|
-| ![Empty vault](docs/screenshots/vault-empty.png) | ![Vault with entries](docs/screenshots/vault-list.png) |
+| ![Empty vault](https://github.com/ahmedabbas52233-a11y/Secure-Cave/blob/main/docs/screenshots/Empty-Vault.png) | ![Vault with entries](https://github.com/ahmedabbas52233-a11y/Secure-Cave/blob/main/docs/screenshots/Vault-Passwords.png) |
 
 | Add entry — Password Forge | Add entry — Passphrase Forge |
 |---|---|
 | ![Password generator](docs/screenshots/vault-add-modal.png) | ![Passphrase generator](docs/screenshots/vault-passphrase-forge.png) |
 
-![Revealed password](docs/screenshots/vault-reveal.png)
+![Revealed password](https://github.com/ahmedabbas52233-a11y/Secure-Cave/blob/main/docs/screenshots/Revealed-Passwords.png)
 
 ### Vault Health
 
-![Health scanner](docs/screenshots/health-view.png)
+![Health scanner](https://github.com/ahmedabbas52233-a11y/Secure-Cave/blob/main/docs/screenshots/Vault-Health.png)
 
 ### 2FA Codes
 
@@ -76,19 +74,19 @@ After signing in, you're asked for your password **one more time** — this seco
 
 ### Settings
 
-![Settings view](docs/screenshots/settings-view.png)
+![Settings view](https://github.com/ahmedabbas52233-a11y/Secure-Cave/blob/main/docs/screenshots/Settings-Cave.png)
 
 ### Themes
 
 | Dark (default) | Light |
 |---|---|
-| ![Dark theme](docs/screenshots/theme-dark.png) | ![Light theme](docs/screenshots/theme-light.png) |
+| ![Dark theme](https://github.com/ahmedabbas52233-a11y/Secure-Cave/blob/main/docs/screenshots/Empty-Vault.png) | ![Light theme](https://github.com/ahmedabbas52233-a11y/Secure-Cave/blob/main/docs/screenshots/Light-Theme.png) |
 
 ### Mobile
 
 | Sidebar closed | Sidebar open |
 |---|---|
-| ![Mobile closed](docs/screenshots/mobile-sidebar-closed.png) | ![Mobile open](docs/screenshots/mobile-sidebar-open.png) |
+| ![Mobile closed](https://github.com/ahmedabbas52233-a11y/Secure-Cave/blob/main/docs/screenshots/Mobile-sidebar-closed.png) | ![Mobile open](https://github.com/ahmedabbas52233-a11y/Secure-Cave/blob/main/docs/screenshots/Mobile-sidebar-open.png) |
 
 ---
 
