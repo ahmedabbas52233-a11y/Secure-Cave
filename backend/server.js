@@ -1,4 +1,5 @@
-require("dotenv").config();
+require('dotenv').config();
+console.log('ENV CHECK:', process.env.MONGO_URI ? 'URI found' : 'URI MISSING');
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -55,8 +56,7 @@ app.use((err, _req, res, _next) => {
 });
 
 // ── MongoDB + Start ───────────────────────────
-mongoose
-  .connect(process.env.MONGODB_URI)
+  mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log("✅ MongoDB connected");
     const PORT = process.env.PORT || 5000;
