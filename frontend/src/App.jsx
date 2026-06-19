@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import Papa from "papaparse";
 import { AuthProvider, useAuth }     from "./context/AuthContext";
 import { ThemeProvider, useTheme }   from "./context/ThemeContext";
@@ -71,6 +71,13 @@ function InnerApp() {
 
   useAutoLock(unlocked ? handleLock : null, unlocked ? autoLockMs : 0);
 
+  // ── Load TOTP entries when switching to TOTP view ─────────────────
+  useEffect(() => {
+    if (activeView === "totp" && unlocked) {
+      totp.loadEntries();
+    }
+  }, [activeView, unlocked, totp]);
+
   // ── Gate: loading ─────────────────────────────────────────────────
   if (authLoading) return <LoadingScreen />;
   if (!user)       return <AuthScreen />;
@@ -92,6 +99,17 @@ function InnerApp() {
     setAutoLockMs(ms);
     localStorage.setItem("sc_autolock", String(ms));
   };
+
+  // ── TOTP handlers ───────────────────────────────────────────────────
+  const handleTOTPAdd = useCallback(async (name, secret) => {
+    await totp.addEntry(name, secret);
+    showNotif("2FA code activated 🔐");
+  }, [totp, showNotif]);
+
+  const handleTOTPDelete = useCallback(async (id) => {
+    await totp.deleteEntry(id);
+    showNotif("2FA entry removed", "warning");
+  }, [totp, showNotif]);
 
   // ── Vault CRUD ────────────────────────────────────────────────────
   const openAdd = () => {
@@ -207,9 +225,12 @@ function InnerApp() {
           )}
           {activeView === "health"   && <HealthView vault={vault.vault} decryptedPws={vault.decryptedPws} onEditById={openEditById} />}
           {activeView === "totp"     && (
-            <TOTPView entries={totp.entries} codes={totp.codes} times={totp.times}
-              onAdd={totp.addEntry}
-              onDelete={async (id) => { await totp.deleteEntry(id); showNotif("2FA entry removed", "warning"); }}
+            <TOTPView
+              entries={totp.entries}
+              codes={totp.codes}
+              times={totp.times}
+              onAdd={handleTOTPAdd}
+              onDelete={handleTOTPDelete}
             />
           )}
           {activeView === "settings" && (
